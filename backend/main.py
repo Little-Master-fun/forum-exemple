@@ -9,7 +9,13 @@ Base.metadata.create_all(bind=engine)
 app = FastAPI(
     title="论坛 API",
     description="一个简单的论坛后端接口",
-    version="1.0.0"
+    version="1.0.0",
+    swagger_ui_parameters={
+        "url": "/openapi.json",
+    },
+    # 使用国内 CDN
+    swagger_js_url="https://cdn.bootcdn.net/ajax/libs/swagger-ui/5.9.0/swagger-ui-bundle.js",
+    swagger_css_url="https://cdn.bootcdn.net/ajax/libs/swagger-ui/5.9.0/swagger-ui.css",
 )
 
 # 配置 CORS
