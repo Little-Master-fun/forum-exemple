@@ -13,6 +13,8 @@ app = FastAPI(
     title="论坛 API",
     description="一个简单的论坛后端接口",
     version="1.0.0",
+    docs_url=None,     # 一定要是 None
+    redoc_url=None,
 )
 
 # 挂载 Swagger UI 的静态文件到 /swagger-static
