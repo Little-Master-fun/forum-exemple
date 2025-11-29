@@ -1,10 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.staticfiles import StaticFiles
 from fastapi.openapi.docs import get_swagger_ui_html
 from database import engine, Base
 from routers import auth_router, post_router, comment_router
-import os
 
 # 创建数据库表
 Base.metadata.create_all(bind=engine)
@@ -13,8 +11,9 @@ app = FastAPI(
     title="论坛 API",
     description="一个简单的论坛后端接口",
     version="1.0.0",
-    docs_url=None,  # 禁用默认的 /docs
-    redoc_url=None  # 可选：禁用 redoc
+    docs_url=None,
+    redoc_url=None,
+    openapi_url="/openapi.json"
 )
 
 # 配置 CORS
@@ -26,18 +25,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# 挂载 swagger-ui 静态文件
-swagger_ui_path = os.path.join(os.path.dirname(__file__), "node_modules", "swagger-ui-dist")
-app.mount("/swagger-static", StaticFiles(directory=swagger_ui_path), name="swagger-static")
-
 @app.get("/docs", include_in_schema=False)
 async def custom_swagger_ui_html():
     return get_swagger_ui_html(
-        openapi_url=app.openapi_url,
+        openapi_url="/openapi.json",
         title="论坛 API 文档",
-        swagger_js_url="/swagger-static/swagger-ui-bundle.js",
-        swagger_css_url="/swagger-static/swagger-ui.css",
-        swagger_favicon_url="/swagger-static/favicon-32x32.png",
+        swagger_js_url="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5.9.0/swagger-ui-bundle.js",
+        swagger_css_url="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5.9.0/swagger-ui.css",
     )
 
 # 注册路由
